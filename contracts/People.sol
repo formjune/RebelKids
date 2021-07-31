@@ -13,7 +13,6 @@ contract People is ERC721Enumerable, Ownable {
     uint256 public constant TOKEN_PRICE = 0.05 ether;
 
     bool public saleStarted = false;
-    bool public doWithdraw = false;
     string private baseURI;
 
     // TODO move to mapping or delete
@@ -75,7 +74,4 @@ contract People is ERC721Enumerable, Ownable {
         require(payable(msg.sender).send(address(this).balance));
     }
 
-    function toggleDoWithdraw() external onlyOwner {
-        doWithdraw = !doWithdraw;
-    }
 }
