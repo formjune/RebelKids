@@ -28,6 +28,10 @@ contract People is ERC721Enumerable, Ownable {
             require(payable(RECEIVERS[i]).send(msg.value * PERCENTAGE[i] / 100), "transfer error");
     }
 
+    function nextTokenId() private view returns (uint256) {
+        return totalSupply() + 1;
+    }
+
     function mint(uint256 amountToMint) public payable {
         require(saleStarted == true, "This sale has not started.");
         //        require(block.timestamp >= SALE_START_TIME, "Sale has not started.");
@@ -39,7 +43,7 @@ contract People is ERC721Enumerable, Ownable {
         require(TOKEN_PRICE * amountToMint == msg.value, "Incorrect Ether value.");
 
         for (uint256 i = 0; i < amountToMint; i++) {
-            uint256 mintIndex = totalSupply();
+            uint256 mintIndex = nextTokenId();
             _safeMint(msg.sender, mintIndex);
         }
         // TODO move to mapping or delete
@@ -57,7 +61,7 @@ contract People is ERC721Enumerable, Ownable {
     // reserveTokens before sale
     function reserveTokens() public onlyOwner {
         for (uint256 i = 0; i < 100; i++) {
-            uint256 mintIndex = totalSupply();
+            uint256 mintIndex = nextTokenId();
             _safeMint(msg.sender, mintIndex);
         }
     }
