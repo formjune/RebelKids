@@ -40,7 +40,7 @@ contract RebelKids is ERC721, Ownable{
     // variables
     uint private gifted = 0;
     Recipient[] private recipients = [];
-    bool sale_active = false;
+    bool public sale_active = false;
 
     constructor() ERC721("Rebel Kids", "Rebel Kids"){
 
