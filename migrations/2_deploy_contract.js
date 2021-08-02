@@ -1,6 +1,5 @@
-const People = artifacts.require("People");
-const initMessage = "People are uploaded";
+const RebelKids = artifacts.require("RebelKids");
 
 module.exports = function(deployer) {
-  deployer.deploy(People, initMessage);
+  deployer.deploy(RebelKids);
 };
