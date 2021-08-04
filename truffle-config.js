@@ -16,11 +16,12 @@ module.exports = {
             host: '127.0.0.1',     // Localhost (default: none)
             port: 7545,            // Standard Ethereum port (default: none)
             network_id: '*',       // Any network (default: none)
+            gas: 6721975,
         },
         rinkeby: {
             provider: () => new HDWalletProvider(MNEMONIC, `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
             network_id: 4,
-            gas: 5500000,
+            gas: 5000000,
             confirmations: 2,
             timeoutBlocks: 200,
             skipDryRun: true,

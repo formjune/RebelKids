@@ -1,5 +1,5 @@
-const RebelKids = artifacts.require("RebelKids");
+const RebelKids = artifacts.require('RebelKids');
 
-module.exports = function(deployer) {
-  deployer.deploy(RebelKids);
+module.exports = function (deployer) {
+    deployer.deploy(RebelKids);
 };
