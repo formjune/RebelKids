@@ -10,9 +10,12 @@ contract RebelKidsFamiliars is BaseContract {
         "RBLKDSFML",
         666,
         true,
-        10,
+        1,
         0.01 ether
     ) {
+    }
 
+    function preMintCheck() internal virtual override view {
+        require(balanceOf(msg.sender) == 0, "Can't mint more than 1 Familiar");
     }
 }

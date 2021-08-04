@@ -70,6 +70,8 @@ contract BaseContract is ERC721Enumerable, Ownable {
         isSaleActive = false;
     }
 
+    function preMintCheck() internal virtual view {}
+
     // customer interface
     function mint(uint amountToMint) public payable {
         require(isSaleActive, "This sale has not started.");
@@ -79,6 +81,8 @@ contract BaseContract is ERC721Enumerable, Ownable {
 
         require(totalSupply() + amountToMint <= maxSupply, "The amount of Rebel Kids you are trying to mint exceeds the maxSupply.");
         require(tokenPrice * amountToMint == msg.value, "Incorrect Ether value.");
+
+        preMintCheck();
 
         for (uint i = 0; i < amountToMint; i++) {
             _safeMint(msg.sender, totalSupply() + 1);
