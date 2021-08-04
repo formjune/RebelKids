@@ -22,7 +22,7 @@ module.exports = {
             provider: () => new HDWalletProvider(MNEMONIC, `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
             network_id: 4,
             gas: 5000000,
-            confirmations: 2,
+            confirmations: 1,
             timeoutBlocks: 200,
             skipDryRun: true,
             production: true
