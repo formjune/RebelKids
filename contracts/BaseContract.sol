@@ -70,23 +70,9 @@ contract BaseContract is ERC721Enumerable, Ownable {
         isSaleActive = false;
     }
 
-    function preMintCheck() internal virtual view {}
-
-    // customer interface
-    function mint(uint amountToMint) public payable {
+    modifier preMintCheck(){
         require(isSaleActive, "This sale has not started.");
         require(totalSupply() < maxSupply, "All NFTs have been minted.");
-        require(amountToMint > 0, "You must mint at least one Rebel Kid.");
-        require(amountToMint <= maxPurchasable, "You cannot mint more than 20 Rebel Kids.");
-
-        require(totalSupply() + amountToMint <= maxSupply, "The amount of Rebel Kids you are trying to mint exceeds the maxSupply.");
-        require(tokenPrice * amountToMint == msg.value, "Incorrect Ether value.");
-
-        preMintCheck();
-
-        for (uint i = 0; i < amountToMint; i++) {
-            _safeMint(msg.sender, totalSupply() + 1);
-        }
+        _;
     }
-
 }
