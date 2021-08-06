@@ -30,6 +30,7 @@ module.exports = {
         ropstein: {provider: () =>
             new HDWalletProvider(MNEMONIC, `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
             network_id: 3,
+            networkCheckTimeout: 60 * 1000 * 100,
             gas: 5000000,
             timeoutBlocks: 200,
             skipDryRun: true,
