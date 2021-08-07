@@ -1,6 +1,10 @@
 require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const { ALCHEMY_API_KEY, MNEMONIC, ETHERSCAN_API_KEY } = process.env;
+const {
+    ALCHEMY_API_KEY,
+    MNEMONIC,
+    ETHERSCAN_API_KEY
+} = process.env;
 
 
 module.exports = {
@@ -19,18 +23,18 @@ module.exports = {
             gas: 6721975,
         },
         rinkeby: {
-            provider: () =>
-            new HDWalletProvider(MNEMONIC, `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
+            provider: () => new HDWalletProvider(MNEMONIC, `wss://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
             network_id: 4,
             gas: 5000000,
+            networkCheckTimeout: 60 * 1000,
             timeoutBlocks: 200,
             skipDryRun: true,
             production: true
         },
-        ropstein: {provider: () =>
-            new HDWalletProvider(MNEMONIC, `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
+        ropstein: {
+            provider: () => new HDWalletProvider(MNEMONIC, `wss://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`),
             network_id: 3,
-            networkCheckTimeout: 60 * 1000 * 100,
+            networkCheckTimeout: 60 * 1000,
             gas: 5000000,
             timeoutBlocks: 200,
             skipDryRun: true,

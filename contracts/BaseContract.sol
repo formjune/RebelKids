@@ -70,10 +70,6 @@ contract BaseContract is ERC721Enumerable, Ownable {
         isSaleActive = false;
     }
 
-    function giftToken(address to) external onlyOwner {
-        _safeMint(to, totalSupply() + 1);
-    }
-
     function giftTokens(address[] memory addresses) external onlyOwner {
         for (uint i = 0; i < addresses.length; i++) {
             _safeMint(addresses[i], totalSupply() + 1);
