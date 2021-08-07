@@ -1,7 +1,7 @@
 {
   "name": "#1",
   "tokenId": 1,
-  "image": "1.png",
+  "image": "https://raw.githubusercontent.com/formjune/RebelKids/main/metadata/image/1.png",
   "external_url": "https://vk.com/poliniora",
   "description": "looks working :)",
   "attributes": [
