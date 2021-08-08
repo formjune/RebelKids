@@ -5,6 +5,8 @@ import "./BaseContract.sol";
 
 contract RebelKidsFamiliars is BaseContract {
 
+    mapping (address => bool) isMinted;
+
     constructor() BaseContract(
         "Rebel Kids Familiars",
         "RBLKDSFML",
@@ -16,7 +18,8 @@ contract RebelKidsFamiliars is BaseContract {
     }
 
     function _beforeMint() internal virtual override {
-        require(balanceOf(msg.sender) == 0, "Can't mint more than 1 Familiar");
+        require(!isMinted[msg.sender], "Can't mint more than 1 Familiar");
+        isMinted[msg.sender] = true;
     }
 
 }
