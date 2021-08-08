@@ -76,9 +76,22 @@ contract BaseContract is ERC721Enumerable, Ownable {
         }
     }
 
-    modifier preMintCheck(){
+    function _beforeMint() internal virtual {}
+
+    function mint(uint amountToMint) public payable {
         require(isSaleActive, "This sale has not started.");
         require(totalSupply() < maxSupply, "All NFTs have been minted.");
-        _;
+        require(amountToMint > 0, "You must mint at least one token.");
+        require(amountToMint <= maxPurchasable, "You cannot mint such amount of tokens.");
+
+        require(totalSupply() + amountToMint <= maxSupply, "The amount of tokens you are trying to mint exceeds the maxSupply.");
+        require(tokenPrice * amountToMint == msg.value, "Incorrect Ether value.");
+
+        _beforeMint();
+
+        for (uint i = 0; i < amountToMint; i++) {
+            _safeMint(msg.sender, totalSupply() + 1);
+        }
     }
+
 }
