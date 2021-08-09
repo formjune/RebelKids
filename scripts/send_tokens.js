@@ -49,6 +49,8 @@ const argv = yargs
 let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 let activeTransactions = 0;
+let giftOkCount = 0;
+let giftErrCount = 0;
 
 async function awaitActiveTransactionsCountLTE(txCount) {
     while (activeTransactions > txCount) {
@@ -66,6 +68,7 @@ async function makeGiftTransaction(contract, fromAddress, tos) {
             if (confirmationNumber === 2) {
                 for (let to of tos) {
                     logger.info('Gift sent to %s', to);
+                    giftOkCount += 1;
                 }
                 tx.removeListener('confirmation');
                 tx.removeListener('error');
@@ -75,6 +78,7 @@ async function makeGiftTransaction(contract, fromAddress, tos) {
         .on('error', function (error, receipt) {
             for (let to of tos) {
                 logger.error('Couldn\'t send gift to %s', to);
+                giftErrCount += 1;
             }
             logger.error(error);
             activeTransactions -= 1;
@@ -109,7 +113,7 @@ module.exports = async function (callback) {
             await makeGiftTransaction(contract, callerAddress, chunk);
             await awaitActiveTransactionsCountLTE(0);
         }
-        logger.info('Done!');
+        logger.info('Done! %d successful gifts, %d errors', giftOkCount, giftErrCount);
         callback();
     } catch (e) {
         logger.error(e);

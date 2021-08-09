@@ -4,6 +4,11 @@ const yargs = require('yargs');
 const RebelKids = artifacts.require('RebelKids');
 
 const argv = yargs
+    .option('test', {
+        description: 'Is test net',
+        type: 'boolean',
+        demandOption: true
+    })
     .option('delay', {
         description: 'Delay between requests(ms)',
         type: 'number'
@@ -36,10 +41,11 @@ module.exports = async function (callback) {
         const retries = argv.retries || 3;
         const start = argv.start;
         const end = argv.end;
+        const host = yargs.test ? 'https://testnets-api.opensea.io' : 'https://api.opensea.io';
         for (let i = start; i <= end; i++) {
             console.log(`Updating ${i}-th token`);
             const response = await request({
-                url: `https://testnets-api.opensea.io/api/v1/asset/${contractAddress}/${i}/?force_update=true`,
+                url: `${host}/api/v1/asset/${contractAddress}/${i}/?force_update=true`,
                 json: true,
                 maxAttempts: retries,
                 retryDelay: delay,
