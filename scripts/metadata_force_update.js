@@ -1,28 +1,38 @@
 const request = require('requestretry');
 const yargs = require('yargs');
 
-const RebelKids = artifacts.require('RebelKids');
 
 const argv = yargs
     .option('test', {
+        alias: 't',
         description: 'Is test net',
         type: 'boolean',
         demandOption: true
     })
+    .option('contract', {
+        alias: 'c',
+        description: 'Contract name',
+        demandOption: true,
+        type: 'string'
+    })
     .option('delay', {
+        alias: 'd',
         description: 'Delay between requests(ms)',
         type: 'number'
     })
     .option('retries-num', {
+        alias: 'r',
         description: 'Number of retries',
         type: 'number'
     })
     .option('start', {
+        alias: 's',
         description: 'Start tokenId',
         demandOption: true,
         type: 'number',
     })
     .option('end', {
+        alias: 'e',
         description: 'End tokenId',
         demandOption: true,
         type: 'number',
@@ -35,10 +45,10 @@ let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = async function (callback) {
     try {
-        const contract = await RebelKids.deployed();
+        const contract = await artifacts.require(argv.contract).deployed();
         const contractAddress = contract.address;
         const delay = argv.delay || 200;
-        const retries = argv.retries || 3;
+        const retries = argv.retriesNum || 3;
         const start = argv.start;
         const end = argv.end;
         const host = yargs.test ? 'https://testnets-api.opensea.io' : 'https://api.opensea.io';

@@ -9,7 +9,6 @@ contract RebelKids is BaseContract {
         "Rebel Kids",
         "RBLKDS",
         6666,
-        false,
         10,
         0.05 ether
     ) {

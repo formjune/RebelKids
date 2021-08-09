@@ -12,24 +12,21 @@ contract BaseContract is ERC721Enumerable, Ownable {
     }
 
     uint public maxSupply;
-    bool isExtendable;
-    uint maxPurchasable;
-    uint tokenPrice;
-    string baseURI;
-    bool isSaleActive = false;
+    uint public maxPurchasable;
+    uint public tokenPrice;
+    bool public isSaleActive = false;
+    string private baseURI;
     Recipient[] private recipients;
 
     constructor (
         string memory name,
         string memory symbol,
         uint _maxSupply,
-        bool _isExtendable,
         uint _maxPurchasable,
         uint _tokenPrice
     ) ERC721(name, symbol) {
         maxSupply = _maxSupply;
         maxPurchasable = _maxPurchasable;
-        isExtendable = _isExtendable;
         tokenPrice = _tokenPrice;
         // test only
         //        recipients.push(Recipient(payable(0x0C37525f7600B5267f259b13617607b72388d6E2), 33));
@@ -41,10 +38,6 @@ contract BaseContract is ERC721Enumerable, Ownable {
         for (uint i = 1; i <= amount; i++) {
             _safeMint(msg.sender, i);
         }
-    }
-
-    function increaseMaxSupply(uint amount) external onlyOwner {
-        maxSupply += amount;
     }
 
     function setBaseUri(string memory _baseURIArg) external onlyOwner {

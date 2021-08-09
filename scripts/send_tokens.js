@@ -37,6 +37,7 @@ const argv = yargs
         type: 'string'
     })
     .option('batch-size', {
+        alias: 'b',
         description: 'Batch mint size',
         demandOption: false,
         type: 'number'
