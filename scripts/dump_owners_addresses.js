@@ -1,6 +1,5 @@
 const yargs = require('yargs');
 const fs = require('fs');
-var Contract = require('web3-eth-contract');
 
 
 const argv = yargs

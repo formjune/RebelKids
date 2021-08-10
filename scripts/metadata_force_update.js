@@ -1,5 +1,10 @@
+require('dotenv').config();
 const request = require('requestretry');
 const yargs = require('yargs');
+
+const {
+    OPENSEA_API_KEY,
+} = process.env;
 
 
 const argv = yargs
@@ -56,6 +61,9 @@ module.exports = async function (callback) {
             console.log(`Updating ${i}-th token`);
             const response = await request({
                 url: `${host}/api/v1/asset/${contractAddress}/${i}/?force_update=true`,
+                headers: {
+                    'X-API-KEY': OPENSEA_API_KEY
+                },
                 json: true,
                 maxAttempts: retries,
                 retryDelay: delay,
