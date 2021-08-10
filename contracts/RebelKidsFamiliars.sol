@@ -7,9 +7,9 @@ import "./RebelKids.sol";
 contract RebelKidsFamiliars is BaseContract {
 
     uint constant EDITION_SUPPLY = 666;
-    mapping (address => mapping (uint => bool)) isEditionMinted;
+    mapping(address => mapping(uint => bool)) isEditionMinted;
 
-    bool public isOnlyForKids = false;
+    bool public isOnlyForKids;
     RebelKids public rebelKids;
 
     constructor() BaseContract(
@@ -21,6 +21,7 @@ contract RebelKidsFamiliars is BaseContract {
     ) {
     }
 
+    // region setters
     function setRebelKids(RebelKids rebelKidsAddress) external onlyOwner {
         rebelKids = rebelKidsAddress;
     }
@@ -36,12 +37,14 @@ contract RebelKidsFamiliars is BaseContract {
     function setPrice(uint _tokenPrice) external onlyOwner {
         tokenPrice = _tokenPrice;
     }
+    // endregion
 
     function _beforeMint() internal virtual override {
         uint editionNum = totalSupply() / EDITION_SUPPLY;
         require(!isEditionMinted[msg.sender][editionNum], "Can't mint more than 1 Familiar in that edition");
         isEditionMinted[msg.sender][editionNum] = true;
         if (isOnlyForKids) {
+            require(address(rebelKids) != address(0), "RebelKids contract address is not set");
             require(rebelKids.balanceOf(msg.sender) > 0, "You must own at least one Rebel Kid to mint Familiar");
         }
     }
