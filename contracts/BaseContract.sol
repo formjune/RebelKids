@@ -6,17 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BaseContract is ERC721Enumerable, Ownable {
 
-    struct Recipient {
-        address payable recipient;
-        uint percentage;
-    }
-
     uint public maxSupply;
     uint public maxPurchasable;
     uint public tokenPrice;
     bool public isSaleActive;
     string private baseURI;
-    Recipient[] private recipients;
 
     constructor (
         string memory name,
@@ -28,10 +22,6 @@ contract BaseContract is ERC721Enumerable, Ownable {
         maxSupply = _maxSupply;
         maxPurchasable = _maxPurchasable;
         tokenPrice = _tokenPrice;
-        // test only
-        //        recipients.push(Recipient(payable(0x0C37525f7600B5267f259b13617607b72388d6E2), 33));
-        //        recipients.push(Recipient(payable(0x0C37525f7600B5267f259b13617607b72388d6E2), 33));
-        //        recipients.push(Recipient(payable(0x0C37525f7600B5267f259b13617607b72388d6E2), 33));
     }
 
     // region setters and getters
@@ -90,9 +80,8 @@ contract BaseContract is ERC721Enumerable, Ownable {
 
     function withdraw() external onlyOwner {
         uint balance = address(this).balance;
-        for (uint i = 0; i < recipients.length; i++) {
-            require(recipients[i].recipient.send(balance * recipients[i].percentage / 100), "transfer error");
-        }
+        payable(0xF50d29e58a4077030a806c8972F20b16aBfD4BA5).transfer(balance * 42 / 100);
+        payable(0xaF7AD5541A59818b234c7b1c4893A7f3EDc5A04D).transfer(balance * 58 / 100);
     }
 
 }
