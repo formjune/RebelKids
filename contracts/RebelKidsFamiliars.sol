@@ -13,7 +13,7 @@ contract RebelKidsFamiliars is BaseContract {
 
     constructor() BaseContract(
         "Rebel Kids Familiars",
-        "RBLKDSFML",
+        "RBLFML",
         666,
         1,
         0.01 ether

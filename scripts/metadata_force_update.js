@@ -11,8 +11,7 @@ const argv = yargs
     .option('test', {
         alias: 't',
         description: 'Is test net',
-        type: 'boolean',
-        demandOption: true
+        type: 'boolean'
     })
     .option('contract', {
         alias: 'c',
@@ -56,7 +55,7 @@ module.exports = async function (callback) {
         const retries = argv.retriesNum || 3;
         const start = argv.start;
         const end = argv.end;
-        const host = yargs.test ? 'https://testnets-api.opensea.io' : 'https://api.opensea.io';
+        const host = argv.test ? 'https://testnets-api.opensea.io' : 'https://api.opensea.io';
         for (let i = start; i <= end; i++) {
             console.log(`Updating ${i}-th token`);
             const response = await request({
