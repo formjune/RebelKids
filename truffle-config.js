@@ -60,6 +60,20 @@ module.exports = {
             skipDryRun: true,
             production: true
         },
+        mainnet: {
+            provider: () => createProvider({
+                url: `wss://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+                path: "m/44'/60'/0'/0/0",
+                chainId: 1
+            }),
+            network_id: 1,
+            networkCheckTimeout: 60 * 1000,
+            gas: 6000000,
+            timeoutBlocks: 200,
+            skipDryRun: false,
+            confirmations: 2,
+            production: true
+        },
     },
 
     // Set default mocha options here, use special reporters etc.
