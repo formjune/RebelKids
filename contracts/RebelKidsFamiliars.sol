@@ -2,7 +2,6 @@
 pragma solidity ^0.8;
 
 import "./BaseContract.sol";
-import "./RebelKids.sol";
 
 contract RebelKidsFamiliars is BaseContract {
 
@@ -10,7 +9,7 @@ contract RebelKidsFamiliars is BaseContract {
     mapping(address => mapping(uint => bool)) isEditionMinted;
 
     bool public isOnlyForKids;
-    RebelKids public rebelKids;
+    IERC721 public rebelKids;
 
     constructor() BaseContract(
         "Rebel Kids Familiars",
@@ -22,7 +21,7 @@ contract RebelKidsFamiliars is BaseContract {
     }
 
     // region setters
-    function setRebelKids(RebelKids rebelKidsAddress) external onlyOwner {
+    function setRebelKids(IERC721 rebelKidsAddress) external onlyOwner {
         rebelKids = rebelKidsAddress;
     }
 
