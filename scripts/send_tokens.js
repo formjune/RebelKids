@@ -106,7 +106,13 @@ module.exports = async function (callback) {
             return -1;
         }
 
-        const addresses = fs.readFileSync(fileName, 'utf8').trim().split(/\r?\n/);
+        const addresses = fs.readFileSync(fileName, 'utf8').trim().split(/\s+/);
+        logger.info(`Checking ${addresses.length} addresses`);
+        for (let addr of addresses) {
+            if (!web3.utils.isAddress(addr)) {
+                throw new Error(`Bad ${addr} address`);
+            }
+        }
         logger.info(`Processing ${addresses.length} addresses`);
         for (let i = 0; i < addresses.length; i += batchSize) {
             let chunk = addresses.slice(i, i + batchSize);
