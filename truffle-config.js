@@ -23,7 +23,8 @@ module.exports = {
             host: '127.0.0.1',     // Localhost (default: none)
             port: 7545,            // Standard Ethereum port (default: none)
             network_id: '*',       // Any network (default: none)
-            gas: 6721975,
+            gas: 1000000000,
+            gasPrice: 20000000000,
         },
         ropsten: {
             provider: () => createProvider({
@@ -68,7 +69,8 @@ module.exports = {
             }),
             network_id: 1,
             networkCheckTimeout: 60 * 1000,
-            gas: 6000000,
+            gas: 1400000,
+            // gasPrice: 20000000000,
             timeoutBlocks: 200,
             skipDryRun: false,
             confirmations: 2,

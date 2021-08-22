@@ -25,7 +25,7 @@ contract RebelKids is ERC721Enumerable, Ownable {
     }
 
     // region setters and getters
-    function setIsSaleActive(bool _isSaleActive) public onlyOwner {
+    function setSaleActive(bool _isSaleActive) public onlyOwner {
         isSaleActive = _isSaleActive;
     }
 
@@ -69,13 +69,13 @@ contract RebelKids is ERC721Enumerable, Ownable {
         _;
     }
 
-    function reserveTokens(uint amount) external onlyOwner maxSupplyCheck(amount) {
+    function sendTokensToOwner(uint amount) external onlyOwner {
         for (uint i = 0; i < amount; i++) {
             _safeMint(msg.sender, totalSupply() + 1);
         }
     }
 
-    function giftTokens(address[] memory addresses) external onlyOwner maxSupplyCheck(addresses.length) {
+    function giftTokens(address[] memory addresses) external onlyOwner {
         for (uint i = 0; i < addresses.length; i++) {
             _safeMint(addresses[i], totalSupply() + 1);
         }
