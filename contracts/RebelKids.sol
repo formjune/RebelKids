@@ -65,17 +65,17 @@ contract RebelKids is ERC721Enumerable, Ownable {
     modifier maxSupplyCheck(uint amount) {
         require(totalSupply() < MAX_SUPPLY, "All NFTs have been minted.");
         require(amount > 0, "You must mint at least one token.");
-        require(totalSupply() + amount <= MAX_SUPPLY - reservedSupply, "The amount of tokens you are trying to mint exceeds the MAX_SUPPLY - reservedSupply.");
+        require(totalSupply() + amount <= MAX_SUPPLY, "The amount of tokens you are trying to mint exceeds the MAX_SUPPLY - reservedSupply.");
         _;
     }
 
-    function sendTokensToOwner(uint amount) external onlyOwner {
+    function sendTokensToOwner(uint amount) external onlyOwner maxSupplyCheck(amount) {
         for (uint i = 0; i < amount; i++) {
             _safeMint(msg.sender, totalSupply() + 1);
         }
     }
 
-    function giftTokens(address[] memory addresses) external onlyOwner {
+    function giftTokens(address[] memory addresses) external onlyOwner maxSupplyCheck(addresses.length) {
         for (uint i = 0; i < addresses.length; i++) {
             _safeMint(addresses[i], totalSupply() + 1);
         }
@@ -89,6 +89,7 @@ contract RebelKids is ERC721Enumerable, Ownable {
         }
         require(TOKEN_PRICE * amountToMint == msg.value, "Incorrect Ether value.");
         require(mintedAmount[msg.sender][salesStage] + amountToMint <= maxMintsPerWallet, "Can't mint RebelKids more than maxMintsPerWallet");
+        require(totalSupply() + amountToMint <= MAX_SUPPLY - reservedSupply, "The amount of tokens you are trying to mint exceeds the MAX_SUPPLY - reservedSupply.");
 
         mintedAmount[msg.sender][salesStage] += amountToMint;
 
