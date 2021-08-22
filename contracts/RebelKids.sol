@@ -14,6 +14,7 @@ contract RebelKids is ERC721Enumerable, Ownable {
     bool public isSaleActive;
     bool public isPresaleActive;
     uint public presaleSupply;
+    uint public reservedSupply;
 
     uint public maxMintsPerWallet;
     bool public currentEdition;
@@ -47,6 +48,10 @@ contract RebelKids is ERC721Enumerable, Ownable {
     function setPresaleSupply(uint _presaleSupply) external onlyOwner {
         presaleSupply = _presaleSupply;
     }
+
+    function setReservedSupply(uint _reservedSupply) external onlyOwner {
+        reservedSupply = _reservedSupply;
+    }
     // endregion
 
     // region metadata
@@ -60,7 +65,7 @@ contract RebelKids is ERC721Enumerable, Ownable {
     modifier maxSupplyCheck(uint amount) {
         require(totalSupply() < MAX_SUPPLY, "All NFTs have been minted.");
         require(amount > 0, "You must mint at least one token.");
-        require(totalSupply() + amount <= MAX_SUPPLY, "The amount of tokens you are trying to mint exceeds the MAX_SUPPLY.");
+        require(totalSupply() + amount <= MAX_SUPPLY - reservedSupply, "The amount of tokens you are trying to mint exceeds the MAX_SUPPLY - reservedSupply.");
         _;
     }
 
