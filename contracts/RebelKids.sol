@@ -52,6 +52,20 @@ contract RebelKids is ERC721Enumerable, Ownable {
     function setReservedSupply(uint _reservedSupply) external onlyOwner {
         reservedSupply = _reservedSupply;
     }
+
+    function configurePresale(uint _maxMintsPerWallet, uint _presaleSupply, uint _reservedSupply) external onlyOwner {
+        maxMintsPerWallet = _maxMintsPerWallet;
+        presaleSupply = _presaleSupply;
+        reservedSupply = _reservedSupply;
+        isPresaleActive = true;
+    }
+
+    function configureSale(uint _maxMintsPerWallet) external onlyOwner {
+        maxMintsPerWallet = _maxMintsPerWallet;
+        salesStage = 1;
+        isPresaleActive = false;
+        isSaleActive = true;
+    }
     // endregion
 
     // region metadata
