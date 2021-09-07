@@ -22,7 +22,7 @@ contract RebelTickets is ERC20, ReentrancyGuard {
     constructor(ERC721Enumerable _kidsContract, ERC721Enumerable _familiarsContract) ERC20("Rebel Tickets", "RBLTCKT") {
         _mint(_msgSender(), MAX_CAP * 15 / 100);
         months = [1633046400, 1635724800, 1638316800, 1640995200, 1643673600, 1646092800];
-        rewards = [3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 8860, 8941, 8983, 8998, 9000];
+        rewards = [0, 3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 8860, 8941, 8983, 8998, 9000];
         kidsContract = _kidsContract;
         familiarsContract = _familiarsContract;
     }
@@ -43,30 +43,54 @@ contract RebelTickets is ERC20, ReentrancyGuard {
         return months.length + 1;
     }
 
-    function claim(IERC721Enumerable minterContract, uint8 scale) internal {
+    function findClaimableTokens(IERC721Enumerable minterContract, uint8 scale) internal view returns (uint, uint[] memory) {
         uint balance = minterContract.balanceOf(_msgSender());
-        require(balance > 0, "Your token must be positive to claim tickets");
 
-        uint notRewardedTokens = 0;
         uint weight = 0;
         address contractAddress = address(minterContract);
-
+        uint month = currentMonth(block.timestamp);
+        uint[] memory rewardedTokens = new uint[](balance);
+        uint pos = 0;
         for (uint i = 0; i < balance; i++) {
             uint tokenId = minterContract.tokenOfOwnerByIndex(_msgSender(), i);
             uint lastMonth = lastRewardedMonth[contractAddress][tokenId];
-            uint month = currentMonth(block.timestamp);
 
             if (lastMonth == 0 || lastMonth < month) {
-                notRewardedTokens += 1;
-                lastRewardedMonth[contractAddress][tokenId] = month;
-                weight += 1 << (6 - rewardsCount[contractAddress][tokenId]);
-                rewardsCount[contractAddress][tokenId] += 1;
+                uint d = 6 - rewardsCount[contractAddress][tokenId];
+                weight += 1 << (d > 0 ? d : 0);
+                rewardedTokens[pos] = tokenId;
+                pos += 1;
             }
         }
-        require(notRewardedTokens > 0, "No tokens to claim reward for");
-        uint rewardPerToken = rewards[balance > rewards.length ? rewards.length - 1 : balance - 1];
-        uint reward = weight * rewardPerToken * notRewardedTokens / scale / 64;
-        _mint(_msgSender(), reward > MAX_CAP - totalSupply() ? MAX_CAP - totalSupply() : reward);
+
+        uint rewardPerToken = rewards[balance > rewards.length ? rewards.length - 1 : balance];
+        uint reward = weight * rewardPerToken / scale / 64;
+        return (reward > MAX_CAP - totalSupply() ? MAX_CAP - totalSupply() : reward, rewardedTokens);
+    }
+
+    function claim(IERC721Enumerable minterContract, uint8 scale) internal {
+        (uint tickets, uint[] memory tokens) = findClaimableTokens(minterContract, scale);
+        uint month = currentMonth(block.timestamp);
+        for (uint i = 0; i < tokens.length; i++) {
+            if (tokens[i] == 0) {
+                break;
+            }
+            lastRewardedMonth[address(minterContract)][tokens[i]] = month;
+            rewardsCount[address(minterContract)][tokens[i]] += 1;
+        }
+        if (tickets != 0) {
+            _mint(_msgSender(), tickets);
+        }
+    }
+
+    function findClaimableTokensForKids() external view returns (uint) {
+        (uint tickets,) = findClaimableTokens(kidsContract, 1);
+        return tickets;
+    }
+
+    function findClaimableTokensForFamiliars() external view returns (uint) {
+        (uint tickets,) = findClaimableTokens(familiarsContract, 3);
+        return tickets;
     }
 
     function claimWithKids() external nonReentrant {
