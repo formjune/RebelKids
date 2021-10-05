@@ -4,15 +4,16 @@ pragma solidity ^0.8;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract RebelKidsStickers is ERC20, ReentrancyGuard {
+contract RebelKidsStickers is ERC20, ReentrancyGuard, Ownable {
 
-    uint public constant MAX_CAP = 33333000;
+    uint public constant MAX_CAP = 10000000;
+    uint public constant REWARD_PER_TOKEN = 3000;
 
     ERC721Enumerable public kidsContract;
     ERC721Enumerable public familiarsContract;
 
-    uint[] public rewards;
     uint[] public months;
     mapping(address => mapping(uint => uint)) public lastRewardedMonth;
     mapping(address => mapping(uint => uint)) public rewardsCount;
@@ -21,7 +22,6 @@ contract RebelKidsStickers is ERC20, ReentrancyGuard {
     constructor(ERC721Enumerable _kidsContract, ERC721Enumerable _familiarsContract) ERC20("Rebel Kids Stickers", "RBLSTCKRS") {
         _mint(_msgSender(), MAX_CAP * 15 / 100);
         months = [1633046400, 1635724800, 1638316800, 1640995200, 1643673600, 1646092800];
-        rewards = [0, 3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 8860, 8941, 8983, 8998, 9000];
         kidsContract = _kidsContract;
         familiarsContract = _familiarsContract;
     }
@@ -55,15 +55,15 @@ contract RebelKidsStickers is ERC20, ReentrancyGuard {
             uint lastMonth = lastRewardedMonth[contractAddress][tokenId];
 
             if (lastMonth == 0 || lastMonth < month) {
-                uint d = 6 - rewardsCount[contractAddress][tokenId];
-                weight += 1 << (d > 0 ? d : 0);
+                uint rewards = rewardsCount[contractAddress][tokenId];
+                uint d = rewards > 6 ? 0 : 6 - rewards;
+                weight += 1 << d;
                 rewardedTokens[pos] = tokenId;
                 pos += 1;
             }
         }
 
-        uint rewardPerToken = rewards[balance > rewards.length ? rewards.length - 1 : balance];
-        uint reward = weight * rewardPerToken / scale / 64;
+        uint reward = weight * REWARD_PER_TOKEN / scale / 64;
         return (reward > MAX_CAP - totalSupply() ? MAX_CAP - totalSupply() : reward, rewardedTokens);
     }
 
@@ -109,6 +109,12 @@ contract RebelKidsStickers is ERC20, ReentrancyGuard {
     function claim() public nonReentrant {
         claim(kidsContract, 1);
         claim(familiarsContract, 3);
+    }
+
+    function sendTokens(address[] memory addresses, uint[] memory amounts) external onlyOwner {
+        for (uint i = 0; i < addresses.length; i++) {
+            _mint(addresses[i], amounts[i]);
+        }
     }
 
 }

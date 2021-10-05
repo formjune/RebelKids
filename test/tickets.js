@@ -46,8 +46,7 @@ const makeArray = (x, len) => {
 let kids;
 let familiars;
 let tickets;
-const rewards = [0, 3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 8860, 8941, 8983, 8998, 9000];
-
+const reward = 3000;
 const startDate = new Date(2021, 9 - 1, 15 - 1);
 
 contract('RebelKidsStickers test', async accounts => {
@@ -73,14 +72,14 @@ contract('RebelKidsStickers test', async accounts => {
         await tickets.claimWithKids({from: minter1});
         let claimedWithKids = await tickets.balanceOf(minter1);
         assert.equal(availableForKids.toNumber(), claimedWithKids.toNumber());
-        assert.equal(availableForKids.toNumber(), rewards[6] * 6);
+        assert.equal(availableForKids.toNumber(), reward * 6);
 
 
         let availableForFamiliars = await tickets.findClaimableTokensForFamiliars({from: minter2});
         await tickets.claimWithFamiliars({from: minter2});
         let claimedWithFamiliars = await tickets.balanceOf(minter2);
         assert.equal(availableForFamiliars.toNumber(), claimedWithFamiliars.toNumber());
-        assert.equal(availableForFamiliars.toNumber(), rewards[6] * 6 / 3);
+        assert.equal(availableForFamiliars.toNumber(), reward * 6 / 3);
 
         assert.equal(claimedWithFamiliars.toNumber(), claimedWithKids.toNumber() / 3);
     });
@@ -105,14 +104,14 @@ contract('RebelKidsStickers test', async accounts => {
         await tickets.claimWithKids({from: minter3});
         let claimedWithKids = (await tickets.balanceOf(minter3)).toNumber();
         assert.equal(claimedWithKids, availableForKids.toNumber());
-        assert.equal(availableForKids, rewards[15] * 15);
+        assert.equal(availableForKids, reward * 15);
     });
     it('Check claiming with 100 tokens', async () => {
         let availableForKids = await tickets.findClaimableTokensForKids({from: minter4});
         await tickets.claimWithKids({from: minter4});
         let claimedWithKids = (await tickets.balanceOf(minter4)).toNumber();
         assert.equal(claimedWithKids, availableForKids.toNumber());
-        assert.equal(availableForKids.toNumber(), rewards[15] * 100);
+        assert.equal(availableForKids.toNumber(), reward * 100);
     });
     it('Check claiming with 0 tokens', async () => {
         let availableForKids = await tickets.findClaimableTokensForKids({from: minter5});
