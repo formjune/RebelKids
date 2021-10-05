@@ -20,7 +20,6 @@ contract RebelKidsStickers is ERC20, ReentrancyGuard, Ownable {
 
 
     constructor(ERC721Enumerable _kidsContract, ERC721Enumerable _familiarsContract) ERC20("Rebel Kids Stickers", "RBLSTCKRS") {
-        _mint(_msgSender(), MAX_CAP * 15 / 100);
         months = [1633046400, 1635724800, 1638316800, 1640995200, 1643673600, 1646092800];
         kidsContract = _kidsContract;
         familiarsContract = _familiarsContract;
