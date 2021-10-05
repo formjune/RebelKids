@@ -1,4 +1,4 @@
-const RebelTickets = artifacts.require('RebelTickets');
+const RebelKidsStickers = artifacts.require('RebelKidsStickers');
 const RebelKids = artifacts.require('RebelKids');
 const RebelFamiliars = artifacts.require('RebelKidsFamiliars');
 
@@ -50,7 +50,7 @@ const rewards = [0, 3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 
 
 const startDate = new Date(2021, 9 - 1, 15 - 1);
 
-contract('RebelTickets test', async accounts => {
+contract('RebelKidsStickers test', async accounts => {
     it('Test configuration, set ganache block timestamp=2021-09-05', async () => {
         minter1 = (await web3.eth.getAccounts())[1];
         minter2 = (await web3.eth.getAccounts())[2];
@@ -60,7 +60,7 @@ contract('RebelTickets test', async accounts => {
         await setBlockTimestamp(startDate);
         kids = await RebelKids.deployed();
         familiars = await RebelFamiliars.deployed();
-        tickets = await RebelTickets.deployed();
+        tickets = await RebelKidsStickers.deployed();
     });
     it('Mint 2 token to kids, 6 to familiars', async () => {
         await kids.giftTokens(makeArray(minter1, 6));

@@ -3,12 +3,11 @@ pragma solidity ^0.8;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract RebelTickets is ERC20, ReentrancyGuard {
+contract RebelKidsStickers is ERC20, ReentrancyGuard {
 
-    uint public constant MAX_CAP = 66666000;
+    uint public constant MAX_CAP = 33333000;
 
     ERC721Enumerable public kidsContract;
     ERC721Enumerable public familiarsContract;
@@ -19,7 +18,7 @@ contract RebelTickets is ERC20, ReentrancyGuard {
     mapping(address => mapping(uint => uint)) public rewardsCount;
 
 
-    constructor(ERC721Enumerable _kidsContract, ERC721Enumerable _familiarsContract) ERC20("Rebel Tickets", "RBLTCKT") {
+    constructor(ERC721Enumerable _kidsContract, ERC721Enumerable _familiarsContract) ERC20("Rebel Kids Stickers", "RBLSTCKRS") {
         _mint(_msgSender(), MAX_CAP * 15 / 100);
         months = [1633046400, 1635724800, 1638316800, 1640995200, 1643673600, 1646092800];
         rewards = [0, 3000, 4196, 5222, 6090, 6813, 7406, 7880, 8250, 8528, 8727, 8860, 8941, 8983, 8998, 9000];
@@ -83,21 +82,32 @@ contract RebelTickets is ERC20, ReentrancyGuard {
         }
     }
 
-    function findClaimableTokensForKids() external view returns (uint) {
+    function findClaimableTokensForKids() public view returns (uint) {
         (uint tickets,) = findClaimableTokens(kidsContract, 1);
         return tickets;
     }
 
-    function findClaimableTokensForFamiliars() external view returns (uint) {
+    function findClaimableTokensForFamiliars() public view returns (uint) {
         (uint tickets,) = findClaimableTokens(familiarsContract, 3);
         return tickets;
     }
 
-    function claimWithKids() external nonReentrant {
+    function findClaimableTokensForAll() public view returns (uint) {
+        (uint tickets1,) = findClaimableTokens(kidsContract, 1);
+        (uint tickets2,) = findClaimableTokens(familiarsContract, 3);
+        return tickets1 + tickets2;
+    }
+
+    function claimWithKids() public nonReentrant {
         claim(kidsContract, 1);
     }
 
-    function claimWithFamiliars() external nonReentrant {
+    function claimWithFamiliars() public nonReentrant {
+        claim(familiarsContract, 3);
+    }
+
+    function claim() public nonReentrant {
+        claim(kidsContract, 1);
         claim(familiarsContract, 3);
     }
 
